@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>وكيل استراتيجية الاستثمار</title>
+<style>
+:root {
+  --bg: #0d1421;
+  --card: #16203a;
+  --card2: #1c2947;
+  --border: #26354f;
+  --text: #e8eefc;
+  --muted: #93a4c3;
+  --pos: #22c55e;
+  --neg: #ef4444;
+  --neu: #94a3b8;
+  --gold: #f0b429;
+  --purple: #8b5cf6;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+  background: linear-gradient(160deg, #0d1421 0%, #101c33 100%);
+  color: var(--text);
+  min-height: 100vh;
+}
+header {
+  background: rgba(13,20,33,.9);
+  border-bottom: 1px solid var(--border);
+  padding: 18px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px;
+  position: sticky; top: 0; z-index: 10; backdrop-filter: blur(6px);
+}
+.brand { display: flex; align-items: center; gap: 12px; }
+.logo {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: linear-gradient(135deg, #f0b429, #b45309);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; box-shadow: 0 4px 14px rgba(240,180,41,.4);
+}
+.brand h1 { font-size: 19px; font-weight: 700; }
+.brand small { color: var(--muted); font-size: 12px; display: block; }
+.actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.btn {
+  border: none; cursor: pointer; border-radius: 10px;
+  padding: 9px 16px; font-size: 13px; font-weight: 600;
+  color: #fff; background: #2563eb; transition: .2s;
+}
+.btn:hover { filter: brightness(1.15); transform: translateY(-1px); }
+.btn:disabled { opacity: .5; cursor: wait; }
+.btn.gold { background: #b45309; }
+.net-info { font-size: 12px; color: var(--muted); }
+.net-info .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-left: 6px; }
+.dot.online { background: var(--pos); }
+.dot.offline { background: var(--neg); }
+main { padding: 22px; max-width: 1200px; margin: 0 auto; }
+.stats {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 14px; margin-bottom: 20px;
+}
+.stat {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 16px;
+}
+.stat .num { font-size: 24px; font-weight: 800; margin-top: 4px; }
+.stat .lbl { color: var(--muted); font-size: 13px; }
+.stat.good { border-top: 3px solid var(--pos); }
+.stat.bad { border-top: 3px solid var(--neg); }
+.stat.neutral { border-top: 3px solid var(--neu); }
+.stat.gold { border-top: 3px solid var(--gold); }
+.stat.purple { border-top: 3px solid var(--purple); }
+.section {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 18px; margin-bottom: 18px;
+}
+.section h2 { font-size: 15px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.summary p { font-size: 13.5px; line-height: 1.9; color: var(--text); margin-bottom: 10px; }
+.summary p:last-child { margin-bottom: 0; }
+.alloc-bar { display: flex; height: 26px; border-radius: 12px; overflow: hidden; margin: 12px 0; }
+.alloc-bar .inv { background: linear-gradient(90deg, #16a34a, #22c55e); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: #062a12; }
+.alloc-bar .cash { background: var(--card2); border: 1px dashed var(--border); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--muted); }
+.alloc-legend { display: flex; gap: 18px; font-size: 12px; color: var(--muted); flex-wrap: wrap; }
+.dot-leg { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-left: 6px; vertical-align: middle; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { text-align: right; padding: 9px 10px; border-bottom: 1px solid var(--border); }
+th { color: var(--muted); font-size: 12px; font-weight: 600; }
+tr:hover td { background: rgba(255,255,255,.02); }
+.action {
+  padding: 3px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; white-space: nowrap;
+}
+.action.buy { background: rgba(34,197,94,.15); color: var(--pos); }
+.action.accumulate { background: rgba(34,197,94,.1); color: #4ade80; }
+.action.hold { background: rgba(148,163,184,.15); color: var(--neu); }
+.action.reduce { background: rgba(244,63,94,.12); color: #fb7185; }
+.action.avoid { background: rgba(239,68,68,.15); color: var(--neg); }
+.badge { padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+.badge.up { background: rgba(34,197,94,.15); color: var(--pos); }
+.badge.down { background: rgba(239,68,68,.15); color: var(--neg); }
+.badge.flat { background: rgba(148,163,184,.15); color: var(--neu); }
+.reason-cell { color: var(--muted); font-size: 12px; line-height: 1.6; max-width: 320px; }
+.weight { font-weight: 800; color: var(--gold); }
+.sector-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 12.5px; }
+.sector-row .name { min-width: 110px; }
+.sector-row .sbar { flex: 1; height: 7px; background: var(--card2); border-radius: 8px; overflow: hidden; }
+.sector-row .sbar i { display: block; height: 100%; background: linear-gradient(90deg, #2563eb, #8b5cf6); }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.empty { text-align: center; color: var(--muted); padding: 30px; font-size: 13px; }
+.cap-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+.cap-row label { font-size: 13px; color: var(--muted); }
+.cap-row input {
+  width: 180px; padding: 9px 12px; border-radius: 10px;
+  border: 1px solid var(--border); background: var(--card2); color: var(--text);
+  font-size: 13px; font-family: inherit;
+}
+.cap-row input:focus { outline: none; border-color: var(--gold); }
+footer { text-align: center; color: var(--muted); font-size: 12px; padding: 24px; line-height: 1.8; }
+.last-update { color: var(--muted); font-size: 12px; margin-inline-start: auto; }
+@media (max-width: 860px) { .grid2 { grid-template-columns: 1fr; } table { font-size: 12px; } .reason-cell { max-width: 200px; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo">🏦</div>
+    <div>
+      <h1>وكيل استراتيجية الاستثمار</h1>
+      <small>بناء استراتيجية استرشادية من تحليل وكيل محلل السوق (توزيع، توصيات، مخاطر)</small>
+    </div>
+  </div>
+  <div class="actions">
+    <span class="net-info" id="netInfo"><span class="dot offline" id="netDot"></span><span id="netText">جارٍ الاتصال بمحلل السوق...</span></span>
+    <button class="btn gold" id="genBtn" onclick="generate()">🧠 توليد استراتيجية</button>
+  </div>
+</header>
+
+<main>
+  <div class="stats">
+    <div class="stat gold">
+      <div class="lbl">حالة السوق</div>
+      <div class="num" id="sRegime">-</div>
+    </div>
+    <div class="stat purple">
+      <div class="lbl">مستوى المخاطرة</div>
+      <div class="num" id="sRisk">-</div>
+    </div>
+    <div class="stat neutral">
+      <div class="lbl">معنويات السوق</div>
+      <div class="num" id="sSenti">0%</div>
+    </div>
+    <div class="stat good">
+      <div class="lbl">متوقع ارتفاع</div>
+      <div class="num" id="sUp">0</div>
+    </div>
+    <div class="stat bad">
+      <div class="lbl">متوقع هبوط</div>
+      <div class="num" id="sDown">0</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>📄 ملخص الاستراتيجية</h2>
+    <div class="summary" id="summary"></div>
+  </div>
+
+  <div class="section">
+    <h2>⚖️ التوزيع المقترح للمحفظة</h2>
+    <div class="cap-row">
+      <label for="capitalInput">💰 رأس المال المستثمر (ر.س)</label>
+      <input type="number" id="capitalInput" min="1" step="1000" placeholder="مثال: 100000" onchange="saveCapital()">
+      <button class="btn ghost" onclick="saveCapital()">تطبيق</button>
+    </div>
+    <div class="alloc-bar" id="allocBar"></div>
+    <div class="alloc-legend" id="allocLegend"></div>
+  </div>
+
+  <div class="section">
+    <h2>📋 توصيات الشركات</h2>
+    <table>
+      <thead>
+        <tr>
+      <th>الشركة</th>
+      <th>القطاع</th>
+      <th>التوقع</th>
+      <th>الإجراء</th>
+      <th>الوزن</th>
+      <th>المبلغ (ر.س)</th>
+      <th>الثقة</th>
+      <th>الدرجة</th>
+      <th>التبرير (أقوى خبر)</th>
+        </tr>
+      </thead>
+      <tbody id="recs"></tbody>
+    </table>
+  </div>
+
+  <div class="grid2">
+    <div class="section">
+      <h2>💼 توزيع القطاعات</h2>
+      <div id="sectors"></div>
+    </div>
+    <div class="section">
+      <h2>👀 قائمة المراقبة (تقليل / تجنب)</h2>
+      <div id="watchlist"></div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  الاستراتيجية استرشادية مبنية على أخبار آخر ٢٤ ساعة فقط وتُحدَّث دوريًا، ولا تعتبر توصية استثمارية.
+</footer>
+
+<script>
+let cache = null;
+const $ = id => document.getElementById(id);
+
+async function api(path, opts = {}) {
+  const res = await fetch(path, {
+    headers: { "Content-Type": "application/json" },
+    ...opts,
+  });
+  const body = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(body.error || body.message || "خطأ في الطلب");
+  return body;
+}
+
+async function load() {
+  try {
+    const s = await api("/api/strategy");
+    cache = s;
+    render();
+    setNet(s.analyst_connected ? "online" : "offline",
+      s.analyst_connected ? "محلل السوق متصل" : "محلل السوق غير متصل");
+  } catch (e) {
+    setNet("offline", "لا توجد استراتيجية بعد");
+    $("summary").innerHTML = `<div class="empty">⚠️ ${esc(e.message)}</div>`;
+  }
+}
+
+function render() {
+  const s = cache;
+  const m = s.market || {};
+  const al = s.allocation || {};
+  $("sRegime").textContent = m.regime || "-";
+  $("sRisk").textContent = m.risk_level || "-";
+  $("sSenti").textContent = (m.sentiment >= 0 ? "+" : "") + (m.sentiment || 0) + "%";
+  $("sUp").textContent = m.up || 0;
+  $("sDown").textContent = m.down || 0;
+
+  const capEl = $("capitalInput");
+  if (!capEl.dataset.set && s.capital) {
+    capEl.value = s.capital;
+    capEl.dataset.set = "1";
+  }
+
+  $("summary").innerHTML = (s.summary || []).map(p => `<p>${esc(p)}</p>`).join("");
+
+  $("allocBar").innerHTML =
+    `<div class="inv" style="width:${al.invested_pct}%">استثمار ${al.invested_pct}% (${fmt(al.invested_amount)} ر.س)</div>` +
+    `<div class="cash" style="width:${al.cash_pct}%">سيولة ${al.cash_pct}% (${fmt(al.cash_amount)} ر.س)</div>`;
+  $("allocLegend").innerHTML =
+    `<span><span class="dot-leg" style="background:var(--pos)"></span>استثمار</span>` +
+    `<span><span class="dot-leg" style="background:var(--card2);border:1px solid var(--border)"></span>سيولة</span>` +
+    `<span>رأس المال: ${fmt(s.capital)} ر.س</span>` +
+    `<span>آخر تحديث: ${s.generated_at ? fmtDate(s.generated_at) : "-"}</span>`;
+
+  $("recs").innerHTML = (s.companies || []).map(recRow).join("") || `<tr><td colspan="9" class="empty">لا توجد توصيات</td></tr>`;
+  $("sectors").innerHTML = (s.sector_exposure || []).map(sr => {
+    const max = Math.max(1, ...(s.sector_exposure || []).map(x => x.weight_pct));
+    return `<div class="sector-row"><span class="name">${esc(sr.sector)}</span><div class="sbar"><i style="width:${sr.weight_pct / max * 100}%"></i></div><span class="weight">${sr.weight_pct}%</span><span style="color:var(--muted);font-size:12px">${fmt(sr.amount)} ر.س</span></div>`;
+  }).join("") || `<div class="empty">لا توجد أوزان</div>`;
+
+  $("watchlist").innerHTML = (s.watchlist || []).map(w =>
+    `<div class="sector-row"><span class="name">${esc(w.name)}</span><span class="action ${w.action_class}">${esc(w.action)}</span><span style="color:var(--muted);font-size:12px">ثقة ${w.confidence}%</span></div>`
+  ).join("") || `<div class="empty">لا توجد شركات في قائمة المراقبة حاليًا</div>`;
+}
+
+function recRow(r) {
+  const dir = r.signal;
+  return `
+  <tr>
+    <td><b>${esc(r.name)}</b></td>
+    <td>${esc(r.sector)}</td>
+    <td><span class="badge ${dir}">${esc(r.direction)}</span></td>
+    <td><span class="action ${r.action_class}">${esc(r.action)}</span></td>
+    <td class="weight">${r.weight_pct || "0"}%</td>
+    <td>${fmt(r.amount)}</td>
+    <td>${r.confidence}%</td>
+    <td>${r.score >= 0 ? "+" : ""}${r.score}</td>
+    <td class="reason-cell">${esc(r.reason_title || "")}${r.reason_source ? ` <span style="opacity:.7">(${esc(r.reason_source)})</span>` : ""}</td>
+  </tr>`;
+}
+
+function fmt(v) {
+  const n = Number(v || 0);
+  return n.toLocaleString("en-US");
+}
+
+async function saveCapital() {
+  const input = $("capitalInput");
+  const val = Number(input.value);
+  if (!val || val <= 0) { input.focus(); return; }
+  try {
+    const r = await api("/api/capital", {
+      method: "POST",
+      body: JSON.stringify({ capital: val }),
+    });
+    cache = r.strategy;
+    render();
+    setNet(r.strategy.analyst_connected ? "online" : "offline",
+      r.strategy.analyst_connected ? "محلل السوق متصل" : "محلل السوق غير متصل");
+  } catch (e) {
+    setNet("offline", "فشل حفظ رأس المال: " + e.message);
+  }
+}
+
+async function generate() {
+  const btn = $("genBtn");
+  btn.disabled = true;
+  btn.textContent = "⏳ جارٍ التوليد...";
+  try {
+    const r = await api("/api/strategy", { method: "POST" });
+    cache = r.strategy;
+    render();
+    setNet(r.strategy.analyst_connected ? "online" : "offline",
+      r.strategy.analyst_connected ? "محلل السوق متصل" : "محلل السوق غير متصل");
+  } catch (e) {
+    setNet("offline", e.message);
+    $("summary").innerHTML = `<div class="empty">⚠️ ${esc(e.message)}</div>`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "🧠 توليد استراتيجية";
+  }
+}
+
+const AR_MONTHS = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
+function fmtDate(iso) {
+  const t = new Date(iso);
+  if (isNaN(t)) return "";
+  const hh = String(t.getHours()).padStart(2, "0");
+  const mm = String(t.getMinutes()).padStart(2, "0");
+  return t.getDate() + " " + AR_MONTHS[t.getMonth()] + " " + t.getFullYear() + "، " + hh + ":" + mm;
+}
+
+function setNet(state, text) {
+  $("netDot").className = "dot " + state;
+  $("netText").textContent = text;
+}
+
+function esc(s) {
+  return String(s || "").replace(/[&<>"']/g, c => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[c]));
+}
+
+load();
+setInterval(load, 60000);
+</script>
+</body>
+</html>
